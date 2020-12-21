@@ -25,3 +25,21 @@ In this simple model, you will say a vibrating curvs of number of infected peopl
 This will lead to a negative feedback to the whole system's runninging and finally will lead to a up and down developing of virus spreading.
 
 There are also many places where you can model, for example, how a people's health will develop. How if they cannot get enough care and so on.
+
+![alt simulation result](./jpg/2020-12-21_9-43-35.png)
+
+Sometimes, the case won't be spreading due to the fact that the infect people are recovered, so the curv will be flat.
+
+![alt simulation result](./jpg/2020-12-21_10-22-06.png
+
+To run the simulation, you need to run :
+
+sxpRunNCPWorld.py
+
+To start simulation, please press SPACE key.
+
+To pause simulation, press SPACE key again.
+
+To restart a simulation, press key R.
+
+NOTE that simulation will get slower and slower as more being in high risk people are simulated. We may need to optimize this.
