@@ -30,7 +30,7 @@ There are also many places where you can model, for example, how a people's heal
 
 Sometimes, the case won't be spreading due to the fact that the infect people are recovered, so the curv will be flat.
 
-![alt simulation result](./jpg/2020-12-21_10-22-06.png
+![alt simulation result](./jpg/2020-12-21_10-22-06.png)
 
 To run the simulation, you need to run :
 
