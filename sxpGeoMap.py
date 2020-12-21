@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 # -------------------------------------------------------------------------------
-# Name:
+# Name: Xiaoping Sun
 # Purpose:
 # Create Time: 2020/12/18 11:00
-# Author: Xiaoping Sun
+# Author: Xiaoping Sun xiaopingsun@gmail.com//971994252@qq.com
 # Copyright:   (c) t 2020
 # Licence:     <MIT licence>
 # -------------------------------------------------------------------------------

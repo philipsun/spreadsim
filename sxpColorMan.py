@@ -1,3 +1,13 @@
+# -*- coding: utf-8 -*-
+# -------------------------------------------------------------------------------
+# Name:
+# Purpose: This is to connect pygame to sxpNCPState
+# Create Time: 2020/12/18 10:15
+# Author: Xiaoping Sun  xiaopingsun@gmail.com//971994252@qq.com
+# Copyright:   (c) t 2020
+# Licence:     <MIT licence>
+# -------------------------------------------------------------------------------
+
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import cm

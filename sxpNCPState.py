@@ -1,6 +1,15 @@
+# -*- coding: utf-8 -*-
+# -------------------------------------------------------------------------------
+# Name:
+# Purpose: This is to connect pygame to sxpNCPState
+# Create Time: 2020/12/18 10:15
+# Author: Xiaoping Sun  xiaopingsun@gmail.com//971994252@qq.com
+# Copyright:   (c) t 2020
+# Licence:     <MIT licence>
+# -------------------------------------------------------------------------------
+
 #this file contains some classes that are to read text files
-#coding=UTF-8
-from sxpStateTrans import *
+
 import sxpColorMan
 import numpy as np
 import sxpGeoMap

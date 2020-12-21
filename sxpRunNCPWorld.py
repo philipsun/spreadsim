@@ -3,16 +3,7 @@
 # Name:
 # Purpose: This is to connect pygame to sxpNCPState
 # Create Time: 2020/12/18 10:15
-# Author: Xiaoping Sun
-# Copyright:   (c) t 2020
-# Licence:     <MIT licence>
-# -------------------------------------------------------------------------------
-# -*- coding: utf-8 -*-
-# -------------------------------------------------------------------------------
-# Name:
-# Purpose:
-# Create Time: 2020/12/16 9:03
-# Author: Xiaoping Sun
+# Author: Xiaoping Sun  xiaopingsun@gmail.com//971994252@qq.com
 # Copyright:   (c) t 2020
 # Licence:     <MIT licence>
 # -------------------------------------------------------------------------------
@@ -24,7 +15,7 @@ from sys import exit
 import numpy as np
 import sxpColorMan
 import sxpNCPState
-import cv2
+
 
 # 加载资源
 
