@@ -17,7 +17,6 @@ import sxpColorMan
 import sxpNCPState
 
 
-# 加载资源
 
 def getstartline_xpos(num,wi,ypos):
     interval = wi/(num+1);
@@ -36,15 +35,15 @@ def getrandomstart(num,stw,sth,wi,hi):
 
 WINDOW_W = 1000
 WINDOW_H = 600
-one_time = 1    # 时间流速（默认1）
-scale = 1     # 缩放（默认120）
+one_time = 1    # 
+scale = 1     # scale 
 radius_scale = 1
-FPS = 10        # 帧率
-point_size = 2  # 点的大小
+FPS = 10        # framerate for each second
+point_size = 2  # drawopoitn
 line_num =100 # the number of lines;
 max_line_len =500
 b_step = 2
-start_xy = (300, WINDOW_H // 2)  # 圆的位置
+start_xy = (300, WINDOW_H // 2)   
 #start_points=getstartline_xpos(line_num,WINDOW_H,300)
 start_points=getrandomstart(line_num,WINDOW_W/3,200,WINDOW_W/4,WINDOW_H/4)
 drawtitle = False
@@ -52,39 +51,16 @@ drawline = False
 drawst = False
 
 line_length =500;
-# 波形图参数
-b_xy = (600, start_xy[1])  # 波形图原点坐标
-b_scale = 1              # 波形图缩放
-s_color = (200, 100, 0)    # 波形图颜色
-b_color = (100, 200, 0)    # 波形图颜色
+
+b_xy = (600, start_xy[1])  # origin coordinate
+b_scale = 1              # scale
+s_color = (200, 100, 0)    # color to be used
+b_color = (100, 200, 0)    # color to be used
 l_color = (0,100,200) #line color
-b_length = 500             # 波形图显示的长度
+b_length = 500             # range of line
 
-#================================#
-# 在此处设置函数
-# 此处设置的是：f(x) = 1*sin(x) + (1/3)*sin(3x) + (1/5)*sin(5x) + ...
-# 这里是一个方形波
-# Set the function here
-# The settings here are: f(x) = 1*sin(x) + (1/3)*sin(3x) + (1/5)*sin(5x) + ...
-# Here's a square wave.
-#
-# A * sin(v*(θ+ω))
-# A->r    v->angle_v    ω->angle
-# [r, angle_v, angle]
-# fourier_list = [
-#     [1    ,  1, 0],
-#     [1 / 3,  2, 0],
-#     [1 / 5,  3, 0],
-#     [1 / 7,  4, 0],
-#     [1 / 9,  5, 0],
-#     [1 /11, 6, 0],
-#     [1 /13, 7, 0],
-#     [1 /15, 8, 0],
-#     [1 /17, 9, 0],
-#     [1 /19, 10, 0]
-# ]
 
-# 圆圈的颜色来自于这里，你可以随意添加、删除
+# color you may used
 color_list = [
     (255, 50, 50),
     (50, 255, 50),
@@ -95,11 +71,11 @@ color_list = [
     (255, 255, 255)
 ]
 
-# 初始化pygame
+# inti pygame
 pygame.init()
 pygame.mixer.init()
 os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (10, 40)
-# 创建一个窗口
+# create a window 
 screen = pygame.display.set_mode((WINDOW_W, WINDOW_H), pygame.DOUBLEBUF, 32)
 pygame.display.set_caption("TestWorld")
 font = pygame.font.SysFont('microsoftyahei', 16)
@@ -176,7 +152,7 @@ class Boxin():
         self.all_point.append(([dx,dy],c))
 
     def drawrandom(self, screen):
-        # 画一个圆
+        # draw random
         bl = len(self.all_point)
 
 
@@ -253,7 +229,7 @@ class CurvBox():
         npt[1]=self.window[2] + (self.window[3]-self.window[2])*pt[1]
         return npt
     def draw(self, screen,synscale = 1):
-        # 画一个圆
+        # main draw
         pygame.draw.rect(screen, color_list[1], self.rect, 3)
         drawline = True
         pygame.draw.circle(screen, self.linecolor, (int(self.current_point[0])
@@ -342,7 +318,7 @@ class CurvYBox():
         npt[1]=self.window[2] + (self.window[3]-self.window[2])*pt[1]
         return npt
     def drawleft2right(self, screen):
-        # 画一个圆
+        # main draw curve from left 2 right
         pygame.draw.rect(screen, color_list[1], self.rect, 3)
         drawline = True
 
@@ -358,7 +334,7 @@ class CurvYBox():
                                  (self.originpt[0] + int((bl - i - 1) * b_scale), int(self.mappt(self.ys[i + 1]) * scale)),
                                  1)
     def draw(self, screen,synscale = 1):
-        # 画一个圆
+        # main draw curve from rigth 2 left
         pygame.draw.rect(screen, color_list[1], self.rect, 3)
         drawline = True
 
@@ -475,7 +451,7 @@ class CurvMYBox():
         npt[1]=self.window[2] + (self.window[3]-self.window[2])*pt[1]
         return npt
     def drawleft2right(self, screen,datakeyname):
-        # 画一个圆
+        # main draw curve from left 2 right
         pygame.draw.rect(screen, color_list[1], self.rect, 3)
         drawline = True
 
@@ -491,7 +467,7 @@ class CurvMYBox():
                                  (self.originpt[0] + int((bl - i - 1) * b_scale), int(self.mappt(ys[i + 1]) * scale)),
                                  1)
     def draw(self, screen,synscale = 1):
-        # 画一个圆
+        # main draw curve from right 2 left
         pygame.draw.rect(screen, color_list[1], self.rect, 3)
         drawline = True
 
@@ -558,7 +534,7 @@ rline_list.append(curv)
 clock = pygame.time.Clock()
 
 pause = True
-# 游戏主循环
+# main loop
 restart = False
 while True:
     for event in pygame.event.get():
@@ -593,9 +569,9 @@ while True:
             else:
                 print(type(event.key),event.key)
 
-    # 将背景图画上去
+    # fill background as black
     screen.fill((0, 0, 0))
-    # 运行
+    # run
     #draw the moving points
     if restart:
         world.restart()
@@ -607,11 +583,9 @@ while True:
         rline.run(pause)
         synscale = rline.draw(screen,synscale)
 
-    # 画波形
 
 
-
-    # 画文字
+    # draw text
     text_obj = font.render('Dynmic Sim of Spreading of Virus', 1, (255,255,255))
     screen.blit(text_obj, (10, 10))
     text_obj = font.render('key space :start/resume/pause;'.format(b_step), 1, (255,255,255))
@@ -642,9 +616,5 @@ def main():
 
 if __name__ == '__main__':
     main()
-def main():
-    pass;
 
 
-if __name__ == '__main__':
-    main()
