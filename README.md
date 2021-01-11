@@ -32,6 +32,9 @@ To run the simulation, you need to run :
 
 sxpRunNCPWorld.py
 
+when world.autorestart = True
+The simulation is automatically restart when sick number is zero.
+
 To start simulation, please press SPACE key.
 
 To pause simulation, press SPACE key again.
@@ -39,3 +42,7 @@ To pause simulation, press SPACE key again.
 To restart a simulation, press key R.
 
 NOTE that simulation will get slower and slower as more being in high risk people are simulated.
+
+I have update some bugs and append missing files.
+
+Now it can continuously running or can restart by pressing R.

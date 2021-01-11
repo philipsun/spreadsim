@@ -440,6 +440,10 @@ class InfectPersion:
                 self.ngv = 'geo_zhiliao_zhuyuan'
             self.nhv = self.probsel({'health_icu_zhong':0.4, 'health_si':0.05, 'health_huifu':0.1})
     def zhiliao_icu(self):
+        if self.hv == 'health_zhong':
+            self.nhv = self.probsel({'health_zhong':0.2,'health_icu_zhong':0.2,'health_si':0.05,'health_huifu':0.2})
+            self.ngv = "geo_zhiliao_icu"
+
         if self.hv == 'health_icu_zhong':
            self.nhv = self.probsel({'health_icu_zhong':0.4, 'health_si':0.1, 'health_huifu':0.3})
            self.ngv = 'geo_zhiliao_icu'
@@ -496,6 +500,8 @@ class InfectPersion:
 
 class DynWorld():
     def __init__(self,max_n=10000):
+        self.autorestart = False
+        self.need_restart = False
         self.allperson = []
         p = InfectPersion(id = 0)
         #p.initinfect('health_mid','geo_free')
@@ -505,6 +511,8 @@ class DynWorld():
         self.t = 0
         self.allperson.append(p)
     def restart(self):
+
+        self.need_restart=False
         resetst(global_current_st)
         resetst(global_cum_st)
         global_cum_list = []
@@ -550,7 +558,11 @@ class DynWorld():
         print('----person num:',len(self.allperson))
         self.num_infect = len(self.allperson)
         self.collecglobalinfo()
-        self.showcur()
+        self.showcur(printst='detail')
+        if self.autorestart:
+            if global_current_st['health_sick']==0:
+                print('---restart automatically, after 0 sick')
+                self.need_restart= True
     def draw(self,window,pygame,screen,point_size = 2,scale=1):
         self.runone()
         for each in self.allperson:
@@ -568,13 +580,30 @@ class DynWorld():
         global_current_st['health_icu_zhong']
         global_current_st['health_sick'] = nbing
         global_current_st['health_risk'] = min(nbing*1.0/500,1.0)
-    def showcur(self,printst=False):
+    def showcur(self,printst='breif'):
 
-        if printst:
+        if printst=='breif':
             print('ok',global_current_st['health_ok'],
-                  'sick',nbing,
+                  'sick',global_current_st['health_sick'],
                   'dead',global_current_st['health_si'],
                   'recover',global_current_st['health_recover'])
+        if printst=='detail':
+            print('ok',global_current_st['health_ok'],
+                  'wuzheng',global_current_st['health_wuzheng'],
+                  'light', global_current_st['health_light'],
+                  'mid', global_current_st['health_mid'],
+                  'zhong', global_current_st['health_zhong'],
+                  'icu', global_current_st['health_icu_zhong'],
+                  'dead',global_current_st['health_si'],
+                  'recover',global_current_st['health_recover'])
+            print('geo_free',global_current_st['geo_free'],
+                  'geo_kanbing',global_current_st['geo_kanbing'],
+                  'geo_home_geli', global_current_st['geo_home_geli'],
+                  'geo_zhiliao_zhuyuan', global_current_st['geo_zhiliao_zhuyuan'],
+                  'geo_zhiliao_icu', global_current_st['geo_zhiliao_icu'],
+                  'geo_zhiliao_geli', global_current_st['geo_zhiliao_geli'],
+                  'geo_si',global_current_st['geo_si'],
+                  'geo_icu_si',global_current_st['geo_icu_si'])
     def getcurrent(self,datakey,md='cur'):
 
         if md=='cur':

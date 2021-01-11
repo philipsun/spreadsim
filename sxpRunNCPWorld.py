@@ -81,8 +81,10 @@ pygame.display.set_caption("TestWorld")
 font = pygame.font.SysFont('microsoftyahei', 16)
 # for i in pygame.font.get_fonts():
 #     print(i)
-
+#-------------init world simulation----------
 world = sxpNCPState.DynWorld()
+world.autorestart = False
+#--------------------------------------------
 class Boxin():
 
 
@@ -107,11 +109,13 @@ class Boxin():
         npt[0]=self.window[0]+ (self.window[1]-self.window[0])*pt[0]
         npt[1]=self.window[2]+ (self.window[3]-self.window[2])*pt[1]
         return npt
-    def run(self,pause=False):
+    def run(self,pause=False,autorestart= False):
         #self.add_random_point()
         if pause:
             return
+        #------------real world simulation run one time--------------
         world.runone()
+        #------------------------------------------------------------
     def drawworld(self,screen):
         # 画一个圆
         bl = len(world.allperson)
@@ -573,14 +577,19 @@ while True:
     screen.fill((0, 0, 0))
     # run
     #draw the moving points
+    if world.need_restart:
+        restart = True
     if restart:
         world.restart()
         curv.restart()
         restart = False
     synscale = 1
     for i, rline in  enumerate(rline_list):
-
+    #--------------simulation running----------------
+        # Boxin class will run world simulation and draw points of people,
+        # CurvMYBox class will colect data and display curves
         rline.run(pause)
+    #------------------------------------------------
         synscale = rline.draw(screen,synscale)
 
 
