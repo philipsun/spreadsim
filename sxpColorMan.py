@@ -160,8 +160,8 @@ def makecolordict(labledict,cmap_name='hsv'):
 
 import sxpReadFileMan
 import re
-def parsestate(gpat="\'(geo_[a-z_]+)\'",cmape_name='cool'):
-    src = sxpReadFileMan.ReadTextUTF('sxpNCPState.py')
+def parsestate(filename, gpat="\'(geo_[a-z_]+)\'",cmape_name='cool'):
+    src = sxpReadFileMan.ReadTextUTF(filename)
     #gpat = "\'(geo_[a-z_]+)\'"
     g=re.findall(gpat,src)
     ug = []
@@ -181,14 +181,31 @@ def parsestate(gpat="\'(geo_[a-z_]+)\'",cmape_name='cool'):
 gv = [
     'geo_free','geo_kanbing','geo_home_geli','geo_zhiliao_zhuyuan','geo_zhiliao_icu','geo_zhiliao_geli','geo_si,geo_icu_si'
 ]
-geo_colomap = parsestate(gpat="\'(geo_[a-z_]+)\'",cmape_name='cool')
-health_colomap = parsestate(gpat="\'(health_[a-z_]+)\'",cmape_name='coolwarm')
+global_filename='sxpNCPState.py'
+#geo_colomap = parsestate(global_filename, gpat="\'(geo_[a-z_]+)\'",cmape_name='cool')
+#health_colomap = parsestate(global_filename, gpat="\'(health_[a-z_]+)\'",cmape_name='coolwarm')
+geo_colomap = None
+health_colomap = None
+def parsestatefromfile(filename):
+    print('-----parse state from file',filename)
+    global global_filename,geo_colomap,health_colomap
+    global_filename = filename
+    geo_colomap = parsestate(global_filename, gpat="\'(geo_[a-z_]+)\'", cmape_name='cool')
+    health_colomap = parsestate(global_filename, gpat="\'(health_[a-z_]+)\'", cmape_name='coolwarm')
+
 def getstatdict():
     state_st ={}
     for g,v in geo_colomap['lablecolor'].items():
         state_st[g]=0
     for g,v in health_colomap['lablecolor'].items():
         state_st[g]=0
+    return state_st
+def getstatdictlist():
+    state_st ={}
+    for g,v in geo_colomap['lablecolor'].items():
+        state_st[g]=[]
+    for g,v in health_colomap['lablecolor'].items():
+        state_st[g]=[]
     return state_st
 #plotcolormapdict(health_colomap)
 

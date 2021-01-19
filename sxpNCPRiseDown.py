@@ -1,12 +1,31 @@
-# -*- coding: utf-8 -*-
-# -------------------------------------------------------------------------------
-# Name:
-# Purpose: This is to connect pygame to sxpNCPState
-# Create Time: 2020/12/18 10:15
-# Author: Xiaoping Sun  xiaopingsun@gmail.com//971994252@qq.com
-# Copyright:   (c) t 2020
-# Licence:     <MIT licence>
-# -------------------------------------------------------------------------------
+#coding=utf-8
+#-------------------------------------------------------------------------------
+# Name:        ****
+# Purpose:
+#
+# Author:      Sun Xiaoping
+#
+# Created:     03/10/2020
+# Copyright:   (c) sunxp 971994252@qq.com 2020
+# Licence:     <mit licence>
+#-------------------------------------------------------------------------------
+
+#---------------In this model-------------
+print('''
+#---------------in this model------------
+we will simulate how a Covid is spreading and then fading to end
+not because the infected number of people is dropping 
+but because the isolating stregy works as more and more people are infected
+The core in this model is infectothers() which is called when geofree() is called.
+That is, we only consider those who are still in free geo state and simulate their
+infection chains.
+In this model, we update pub_risk and home_risk according to the number of infecious
+But this immediately feedback will make the infection number
+continue to fluctuate as time goes by. 
+It is mainly because the feed back is so immediatly, people wont' wait for any longer time
+for isolation, so you need to add an isolation delay period for feed back.
+#----------------------------------------
+''')
 
 #this file contains some classes that are to read text files
 
@@ -20,6 +39,7 @@ sxpColorMan.parsestatefromfile(thisfilename)
 
 global_cum_st = sxpColorMan.getstatdict()
 global_current_st =sxpColorMan.getstatdict()
+
 global_current_list = []
 global_cum_list = []
 global_geomap = sxpGeoMap.GeoMap(window=[0,400,0,400],originpt=[0.5,0.5],step=8)
@@ -67,6 +87,8 @@ class InfectPersion:
         self.t = 0
         self.startinfect = -1
         self.endinfect = -1
+        self.riskmem = []
+        self.riskmemsize= 10
     def initinfect(self,hv='health_wuzheng',gv='geo_free'):
         self.nhv = hv
         self.ngv = gv
@@ -187,26 +209,38 @@ class InfectPersion:
         region = self.probsel({'pub':1-pstayhome,'home':pstayhome})
         self.nextinfecttype = region
         self.nextinfectlevel = self.myinfectlevel + 1
-
+        #ppubinfect = 1- global_current_st['health_risk']
+        ppubinfect = global_current_st['health_pubinfectrisk']
         homeextend = 2
         if self.hv == 'health_wuzheng':
             if region == 'pub':
-                new_num = self.probnum(1, 10, 1.0 / 10)
+                new_num = self.probnum(0, 50, ppubinfect)
             if region == 'home':
-                homeextend = np.power(3,self.nextinfectlevel)
-                new_num = self.probnum(1, self.homenumber, 1.0 / homeextend)
+                phomeextend = 1./np.power(3,self.nextinfectlevel)
+                if self.homenumber <=0:
+                    new_num = 0
+                else:
+                    new_num = self.probnum(0, self.homenumber, phomeextend)
                 self.homenumber = self.homenumber-new_num
+                if self.homenumber <0:
+                    self.homenumber = 0
+                self.myinfecttype = 'home'
             if new_num >= self.maxinfecteveryday:
                 new_num = self.maxinfecteveryday
             self.infect_new = new_num
      #       self.infect_new_list.append(new_num)
         if self.hv == 'health_light':
             if region == 'pub':
-                new_num = self.probnum(1, 10, 1.0 / 10)
+                new_num = self.probnum(0, 10, ppubinfect)
             if region == 'home':
-                homeextend = np.power(3, self.nextinfectlevel)
-                new_num = self.probnum(1, self.homenumber, 1.0 / homeextend)
-                self.homenumber = self.homenumber - new_num
+                phomeextend = 1./np.power(3, self.nextinfectlevel)
+                if self.homenumber <=0:
+                    new_num = 0
+                else:
+                    new_num = self.probnum(0, self.homenumber, phomeextend)
+                self.homenumber = self.homenumber-new_num
+                if self.homenumber <0:
+                    self.homenumber = 0
                 self.myinfecttype = 'home'
 
             if new_num >= self.maxinfecteveryday:
@@ -215,12 +249,19 @@ class InfectPersion:
      #       self.infect_new_list.append(new_num)
         if self.hv == 'health_mid':
             if region == 'pub':
-                new_num = self.probnum(1, 2, 1.0 / 5)
+                new_num = self.probnum(1, 2, ppubinfect/10)
 
             if region == 'home':
                 homeextend = np.power(3,self.nextinfectlevel)
-                new_num = self.probnum(1, self.homenumber, 1.0 / homeextend)
-                self.homenumber = self.homenumber - new_num
+                phomeextend = 1./np.power(3, self.nextinfectlevel)
+                if self.homenumber <=0:
+                    new_num = 0
+                else:
+                    new_num = self.probnum(0, self.homenumber, phomeextend)
+                self.homenumber = self.homenumber-new_num
+                if self.homenumber <0:
+                    self.homenumber = 0
+                self.myinfecttype = 'home'
 
             if new_num >= self.maxinfecteveryday:
                 new_num = self.maxinfecteveryday
@@ -228,11 +269,18 @@ class InfectPersion:
     #        self.infect_new_list.append(new_num)
         if self.hv == 'health_zhong':
             if region == 'pub':
-                new_num = self.probnum(1, 0, 1 / 4)
+                new_num = self.probnum(1, 0, ppubinfect/10)
             if region == 'home':
-                homeextend = np.power(4, self.nextinfectlevel)
-                new_num = max(self.probnum(1, self.homenumber, 1.0 / homeextend), 0)
-                self.homenumber = self.homenumber - new_num
+                phomeextend = 1./np.power(4, self.nextinfectlevel)
+                if self.homenumber <=0:
+                    new_num = 0
+                else:
+                    new_num = self.probnum(0, self.homenumber, phomeextend)
+                self.homenumber = self.homenumber-new_num
+                if self.homenumber <0:
+                    self.homenumber = 0
+                self.myinfecttype = 'home'
+
 
             if new_num >= self.maxinfecteveryday:
                 new_num = self.maxinfecteveryday
@@ -560,8 +608,10 @@ class DynWorld():
 
         for each in newone:
             self.allperson.append(each)
+
         print('----person num:',len(self.allperson))
         self.num_infect = len(self.allperson)
+        global_current_st['health_newinfect'] = len(newone)
         self.collecglobalinfo()
         self.showcur(printst='detail')
         if self.autorestart:
@@ -584,7 +634,8 @@ class DynWorld():
         global_current_st['health_zhong'] + \
         global_current_st['health_icu_zhong']
         global_current_st['health_sick'] = nbing
-        global_current_st['health_risk'] = min(nbing*1.0/500,1.0)
+        global_current_st['health_risk'] = min(nbing*1.0/100,1.0)
+        global_current_st['health_pubinfectrisk'] = 1- global_current_st['health_risk']
     def showcur(self,printst='breif'):
 
         if printst=='breif':
@@ -594,6 +645,9 @@ class DynWorld():
                   'recover',global_current_st['health_recover'])
         if printst=='detail':
             print('ok',global_current_st['health_ok'],
+                  'health_risk',global_current_st['health_risk'],
+                  'pub_risk', global_current_st['health_pubinfectrisk'],
+                  'newone', global_current_st['health_newinfect'],
                   'wuzheng',global_current_st['health_wuzheng'],
                   'light', global_current_st['health_light'],
                   'mid', global_current_st['health_mid'],

@@ -15,8 +15,8 @@ from sys import exit
 import numpy as np
 import sxpColorMan
 import sxpNCPState
-
-
+import sxpNCPRiseDown
+import sxpNCPDelayRisk
 
 def getstartline_xpos(num,wi,ypos):
     interval = wi/(num+1);
@@ -82,9 +82,13 @@ font = pygame.font.SysFont('microsoftyahei', 16)
 # for i in pygame.font.get_fonts():
 #     print(i)
 #-------------init world simulation----------
-world = sxpNCPState.DynWorld()
+#world = sxpNCPState.DynWorld()
+#world = sxpNCPRiseDown.DynWorld()
+world = sxpNCPDelayRisk.DynWorld()
 world.autorestart = False
 #--------------------------------------------
+
+#-------Boxin for ploting points of world----
 class Boxin():
 
 
@@ -359,6 +363,7 @@ class CurvYBox():
                                  1)
 
         return synscale
+#-------CurvMYBoxin for ploting data curves----
 class CurvMYBox():
     def __init__(self, window,start_point,max_length,linecolor= [255,0,0],name='testy'):
         self.window = window
