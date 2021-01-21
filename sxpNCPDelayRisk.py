@@ -26,6 +26,21 @@ It is mainly because the feed back is so immediatly, people wont' wait for any l
 for isolation, so you need to add an isolation delay period for feed back.
 In this model, we try to use memrisk to control the feed back delay on risks 
 So that the peak situation will be formed.
+
+we use a window average as the risk estimate the risk of being affect and the risk of affecting 
+others, the average risk window size for being affected is 15 while the risk of affecting others
+window size is 2, so that the drop of being affect is dropping slower.
+
+In dynword.estimaterisk(self), we estimate health_risk and health_pubinfect
+
+different window size will determine different shapes of growing number.
+
+when two window sizes are equal to 15, the curves is forming one peak and then falling down and fall into 
+a low level of fluctuation
+
+When two windows size are not equal, one for 15 and one for 2, the curve is more fluctuant
+
+
 #----------------------------------------
 ''')
 
@@ -66,6 +81,8 @@ def getcurrentcum(keyname,windowsize):
 def getcurrentrisk(keyname,windowsize):
     st = global_current_st_mem[keyname]
     n = len(st)
+    if n == 0:
+        return 0
     w = min(n,windowsize)
     winv = st[-w:]
     return np.mean(winv)
@@ -662,11 +679,12 @@ class DynWorld():
         global_current_st['health_sick'] = nbing
         global_current_st['health_risk'] = min(nbing*1.0/100,1.0)
         global_current_st['health_pubinfectrisk'] = 1- global_current_st['health_risk']
-        recordcurrent('health_sick')
+        recordcurrent('health_risk')
+        recordcurrent('health_pubinfectrisk')
         self.estimaterisk()
     def estimaterisk(self):
-        global_current_st['health_estimaterisk']=getcurrentrisk('health_risk',memsize)
-        global_current_st['health_estimatepubinfect'] = getcurrentrisk('health_pubinfectrisk',2)
+        global_current_st['health_estimaterisk']=getcurrentrisk('health_risk',15)
+        global_current_st['health_estimatepubinfect'] = getcurrentrisk('health_pubinfectrisk',15)
     def showcur(self,printst='breif'):
 
         if printst=='breif':

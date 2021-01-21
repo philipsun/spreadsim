@@ -24,6 +24,7 @@ But this immediately feedback will make the infection number
 continue to fluctuate as time goes by. 
 It is mainly because the feed back is so immediatly, people wont' wait for any longer time
 for isolation, so you need to add an isolation delay period for feed back.
+
 #----------------------------------------
 ''')
 
